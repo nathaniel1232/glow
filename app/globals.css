@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0f;
+  --color-bg-raised: #12121a;
+  --color-bg-elevated: #1a1a26;
+  --color-border: #252536;
+  --color-border-subtle: #1c1c2e;
+  --color-text: #e8e8f0;
+  --color-text-muted: #8888a0;
+  --color-text-dim: #55556a;
+  --color-purple: #c084fc;
+  --color-indigo: #818cf8;
+  --color-pink: #f472b6;
+  --color-purple-dim: #c084fc20;
+  --color-indigo-dim: #818cf820;
+  --color-pink-dim: #f472b620;
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: var(--color-purple);
+    color: var(--color-bg);
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, var(--color-purple), var(--color-indigo), var(--color-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-border {
+    box-shadow: 0 0 0 1px var(--color-border), 0 0 20px -5px var(--color-purple-dim);
+  }
+
+  .glow-border-hover:hover {
+    box-shadow: 0 0 0 1px var(--color-purple), 0 0 30px -5px var(--color-purple-dim);
+  }
+}
