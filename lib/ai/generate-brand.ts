@@ -109,10 +109,10 @@ Return a JSON object with EXACTLY this structure (no markdown, no code blocks, j
 }
 
 Rules:
-- Brand names should be short, memorable, and relevant
-- Colors must be harmonious and match the ${vibe} vibe
-- The tagline should be concise and not use generic buzzwords
-- Social templates should feel authentic, not AI-generated
+- Brand names must feel like real startup/brand names humans would actually invent — think Notion, Vercel, Arc, Stripe, Loom, Figma, Oura, Linear, Fathom. NOT generic compound words like "BrandFlow", "CreativeHub", "SmartVibe". Use invented words, short evocative real words, unexpected metaphors, or single strong words. Max 2 syllables preferred. Be bold and surprising.
+- Colors must be harmonious and match the ${vibe} vibe exactly
+- The tagline should be punchy and specific to this exact brand — never generic buzzwords like "empower", "transform", "revolutionize", or "seamless"
+- Social templates should feel like a real human wrote them for this specific brand, not AI filler text
 - All hex codes must be valid 6-character hex colors`;
 
   try {

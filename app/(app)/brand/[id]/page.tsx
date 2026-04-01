@@ -21,13 +21,10 @@ export default async function BrandPage({ params, searchParams }: Props) {
   const project = await getBrandProject(id);
   if (!project || project.user_id !== user.id) notFound();
 
-  const isPaid = project.is_paid || paid === "true";
+  const isPaid = true; // Temporarily free during beta
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
-      {!project.is_paid && paid !== "true" && (
-        <PaywallBanner projectId={project.id} />
-      )}
       <BrandBoard project={project} isPaid={isPaid} />
       {isPaid && (
         <div className="mt-12">
