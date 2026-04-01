@@ -185,42 +185,55 @@ export function BrandBoard({ project, isPaid }: Props) {
       <section>
         <SectionLabel>Social Media Templates</SectionLabel>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {social_templates.map((tmpl, i) => (
-            <div
-              key={i}
-              className="rounded-xl border border-border-subtle overflow-hidden"
-            >
-              {/* Mock social post */}
+          {social_templates.map((tmpl, i) => {
+            const platform = tmpl.type;
+            const platformIcons: Record<string, string> = {
+              instagram: "IG",
+              twitter: "X",
+              linkedin: "in",
+            };
+            return (
               <div
-                className="aspect-square p-6 flex flex-col justify-end"
-                style={{ backgroundColor: colors.primary }}
+                key={i}
+                className="rounded-xl border border-border-subtle overflow-hidden bg-bg-raised"
               >
-                <p
-                  className="text-xl font-bold leading-tight"
-                  style={{
-                    color: colors.background,
-                    fontFamily: `'${fonts.heading}', sans-serif`,
-                  }}
-                >
-                  {tmpl.headline}
-                </p>
-                <p
-                  className="mt-2 text-sm opacity-80"
-                  style={{
-                    color: colors.background,
-                    fontFamily: `'${fonts.body}', sans-serif`,
-                  }}
-                >
-                  {tmpl.subtext}
-                </p>
+                {/* Platform bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border-subtle">
+                  <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-border-subtle text-text-muted">
+                    {platformIcons[platform] ?? platform}
+                  </span>
+                  <span className="text-xs text-text-dim capitalize">{platform}</span>
+                </div>
+                {/* Post preview */}
+                <div className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                      style={{ backgroundColor: colors.primary, color: colors.background }}
+                    >
+                      {brand_names[0]?.[0]}
+                    </div>
+                    <span className="text-xs font-medium text-text-muted">{brand_names[0]}</span>
+                  </div>
+                  <p className="text-sm font-semibold leading-snug mb-1">
+                    {tmpl.headline}
+                  </p>
+                  <p className="text-xs text-text-muted leading-relaxed">
+                    {tmpl.subtext}
+                  </p>
+                </div>
+                {/* Copy button */}
+                <div className="px-5 pb-4">
+                  <button
+                    onClick={() => navigator.clipboard?.writeText(`${tmpl.headline}\n\n${tmpl.subtext}`)}
+                    className="text-xs text-text-dim hover:text-text transition-colors"
+                  >
+                    Copy text →
+                  </button>
+                </div>
               </div>
-              <div className="p-4 bg-bg-raised">
-                <span className="text-xs font-mono uppercase tracking-wider text-text-dim">
-                  {tmpl.type}
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

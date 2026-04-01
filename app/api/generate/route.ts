@@ -5,7 +5,7 @@ import { generateLogos } from "@/lib/ai/generate-logos";
 import { saveBrandProject } from "@/lib/db";
 import type { Vibe } from "@/types";
 
-const VALID_VIBES: Vibe[] = ["minimal", "bold", "organic", "y2k", "dark", "coastal", "retro"];
+const VALID_VIBES: Vibe[] = ["minimal", "bold", "organic", "y2k", "dark", "coastal", "retro", "custom"];
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { description, vibe } = body;
+    const { description, vibe, customKeywords } = body;
 
     if (!description || typeof description !== "string" || description.trim().length < 3) {
       return NextResponse.json(
@@ -33,14 +33,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (vibe === "custom" && (!customKeywords || typeof customKeywords !== "string" || customKeywords.trim().length < 2)) {
+      return NextResponse.json(
+        { error: "Please add some style keywords for the custom vibe" },
+        { status: 400 }
+      );
+    }
+
     const sanitizedDescription = description.trim().slice(0, 500);
+    const sanitizedKeywords = vibe === "custom" ? (customKeywords as string).trim().slice(0, 200) : undefined;
 
     // Generate brand strategy via Gemini
-    const brandResult = await generateBrand(sanitizedDescription, vibe);
+    const brandResult = await generateBrand(sanitizedDescription, vibe, sanitizedKeywords);
 
     // Generate logos via Imagen 3 (Vertex AI Express)
     const primaryName = brandResult.brand_names[0] || "Brand";
-    const logos = await generateLogos(primaryName, vibe, 4);
+    const logos = await generateLogos(primaryName, vibe, 4, sanitizedKeywords);
 
     // Save project with logo data URLs directly
     const project = await saveBrandProject(user.id, {

@@ -13,6 +13,7 @@ const VIBES: { id: Vibe; label: string; desc: string }[] = [
   { id: "dark", label: "Dark", desc: "Moody, sleek, tech" },
   { id: "coastal", label: "Coastal", desc: "Airy, oceanic, fresh" },
   { id: "retro", label: "Retro", desc: "Vintage, nostalgic, warm" },
+  { id: "custom", label: "Custom", desc: "Write your own keywords" },
 ];
 
 function GenerateForm() {
@@ -20,6 +21,7 @@ function GenerateForm() {
   const searchParams = useSearchParams();
   const [description, setDescription] = useState(searchParams.get("description") || "");
   const [vibe, setVibe] = useState<Vibe | null>(null);
+  const [customKeywords, setCustomKeywords] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [step, setStep] = useState<"input" | "generating">("input");
@@ -47,7 +49,7 @@ function GenerateForm() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: description.trim(), vibe }),
+        body: JSON.stringify({ description: description.trim(), vibe, customKeywords: vibe === "custom" ? customKeywords.trim() : undefined }),
       });
 
       clearInterval(progressTimer);
@@ -157,13 +159,32 @@ function GenerateForm() {
             </div>
           </div>
 
+          {/* Custom keywords */}
+          {vibe === "custom" && (
+            <div>
+              <label className="block text-sm text-text-muted mb-2">
+                Your style keywords
+              </label>
+              <input
+                value={customKeywords}
+                onChange={(e) => setCustomKeywords(e.target.value)}
+                placeholder="e.g. playful, bubbly, pastel colors, handwritten, friendly"
+                className="w-full px-4 py-3 bg-bg-elevated border border-border rounded-lg text-text placeholder:text-text-dim focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple/20 transition-colors"
+                maxLength={200}
+              />
+              <p className="mt-1 text-xs text-text-dim">
+                Describe the aesthetic in your own words — colors, mood, references, anything.
+              </p>
+            </div>
+          )}
+
           {error && (
             <p className="text-sm text-pink">{error}</p>
           )}
 
           <Button
             onClick={handleGenerate}
-            disabled={!description.trim() || !vibe}
+            disabled={!description.trim() || !vibe || (vibe === "custom" && !customKeywords.trim())}
             loading={loading}
             size="lg"
             className="w-full"

@@ -5,7 +5,8 @@ export type Vibe =
   | "y2k"
   | "dark"
   | "coastal"
-  | "retro";
+  | "retro"
+  | "custom";
 
 export interface BrandInput {
   description: string;

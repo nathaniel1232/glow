@@ -3,13 +3,14 @@ import type { Vibe } from "@/types";
 const IMAGEN_ENDPOINT = `https://aiplatform.googleapis.com/v1/publishers/google/models/imagen-3.0-generate-001:predict`;
 
 const LOGO_STYLE_MAP: Record<Vibe, string> = {
-  minimal: "minimalist vector logo, clean lines, geometric, single color, white background, professional, modern",
-  bold: "bold graphic logo, strong typography, high contrast, vibrant colors, white background, impactful, modern",
-  organic: "organic hand-drawn logo, natural textures, earthy tones, flowing lines, white background, artisan feel",
-  y2k: "futuristic logo, chrome effect, metallic sheen, neon glow, cyber aesthetic, white background",
-  dark: "sleek logo, neon accents, cyberpunk, sophisticated, dark tech aesthetic, white background",
-  coastal: "coastal logo, ocean blue palette, clean, nautical elements, white background, fresh and airy",
-  retro: "retro vintage logo, 70s style, warm colors, nostalgic badge style, vintage typography, white background",
+  minimal: "flat vector, single color, geometric, ultra clean, no gradients",
+  bold: "strong geometric shape, thick strokes, high contrast, bold typography",
+  organic: "soft flowing shapes, hand-drawn feel, earthy warm tones, rounded edges",
+  y2k: "chrome metallic, neon gradient, futuristic sharp shapes, glossy",
+  dark: "dark mode icon, neon outline glow, sleek minimal shape, tech aesthetic",
+  coastal: "clean nautical icon, ocean blue, simple wave or geometric shape, airy",
+  retro: "vintage badge style, distressed texture, warm muted palette, retro shapes",
+  custom: "",
 };
 
 interface LogoResult {
@@ -47,18 +48,24 @@ async function generateSingleLogo(prompt: string): Promise<string> {
 export async function generateLogos(
   brandName: string,
   vibe: Vibe,
-  count: number = 4
+  count: number = 4,
+  customKeywords?: string
 ): Promise<LogoResult[]> {
-  const baseStyle = LOGO_STYLE_MAP[vibe];
+  const styleDesc = vibe === "custom" && customKeywords
+    ? customKeywords
+    : LOGO_STYLE_MAP[vibe];
+
+  const base = `logo mark for "${brandName}", ${styleDesc}, transparent background, isolated icon, no text, white canvas, professional`;
+
   const variations = [
-    `Lettermark logo for brand "${brandName}". ${baseStyle}. Isolated on white background, no text except the brand initials.`,
-    `Wordmark logo for brand "${brandName}". ${baseStyle}. Clean typographic treatment of the full brand name.`,
-    `Abstract icon/symbol for brand "${brandName}". ${baseStyle}. No text, pure icon mark.`,
-    `Combination logo mark for brand "${brandName}". ${baseStyle}. Icon paired with brand name.`,
+    `Simple lettermark using initials of "${brandName}". ${styleDesc}. Transparent background, centered, no decorations.`,
+    `Abstract icon symbol for "${brandName}". ${styleDesc}. Transparent background, single graphic element, no text.`,
+    `Geometric badge logo for "${brandName}". ${styleDesc}. Transparent background, contained shape.`,
+    `Minimal wordmark for "${brandName}". ${styleDesc}. Transparent background, typographic logo.`,
   ];
 
   const selected = variations.slice(0, count);
-  const styles = ["lettermark", "wordmark", "icon", "combination"].slice(0, count);
+  const styles = ["lettermark", "icon", "badge", "wordmark"].slice(0, count);
 
   const results = await Promise.allSettled(
     selected.map((prompt) => generateSingleLogo(prompt))

@@ -12,30 +12,33 @@ export default async function BioPage({ params }: Props) {
 
   if (!project) notFound();
 
-  const { colors, fonts, logos, voice, bio_links } = project;
+  const { colors, fonts, logos, voice, bio_links, name } = project;
 
   return (
-    <html lang="en">
-      <head>
-        <title>{project.name} -- Links</title>
-        <link href={fonts.headingUrl} rel="stylesheet" />
-        <link href={fonts.bodyUrl} rel="stylesheet" />
-      </head>
-      <body
+    <>
+      <style>{`
+        body {
+          background-color: ${colors.background};
+          color: ${colors.text};
+          margin: 0;
+          padding: 0;
+        }
+        @import url('${fonts.headingUrl}');
+        @import url('${fonts.bodyUrl}');
+      `}</style>
+      <div
         style={{
+          minHeight: "100vh",
           backgroundColor: colors.background,
           color: colors.text,
           fontFamily: `'${fonts.body}', sans-serif`,
-          margin: 0,
-          padding: 0,
-          minHeight: "100vh",
         }}
       >
         <div
           style={{
             maxWidth: "480px",
             margin: "0 auto",
-            padding: "48px 24px",
+            padding: "64px 24px 48px",
             textAlign: "center",
           }}
         >
@@ -43,20 +46,21 @@ export default async function BioPage({ params }: Props) {
           {logos.length > 0 && (
             <div
               style={{
-                width: "80px",
-                height: "80px",
-                borderRadius: "16px",
+                width: "88px",
+                height: "88px",
+                borderRadius: "20px",
                 overflow: "hidden",
-                margin: "0 auto 24px",
-                backgroundColor: "#fff",
+                margin: "0 auto 28px",
+                border: `1px solid ${colors.primary}30`,
+                backgroundColor: `${colors.primary}10`,
               }}
             >
               <Image
                 src={logos[0].url}
-                alt={project.name}
-                width={80}
-                height={80}
-                style={{ objectFit: "contain", padding: "8px" }}
+                alt={name}
+                width={88}
+                height={88}
+                style={{ objectFit: "contain", padding: "12px" }}
               />
             </div>
           )}
@@ -65,28 +69,31 @@ export default async function BioPage({ params }: Props) {
           <h1
             style={{
               fontFamily: `'${fonts.heading}', sans-serif`,
-              fontSize: "24px",
+              fontSize: "26px",
               fontWeight: 700,
               margin: "0 0 8px",
               color: colors.text,
+              letterSpacing: "-0.02em",
             }}
           >
-            {project.name}
+            {name}
           </h1>
 
           {/* Tagline */}
           <p
             style={{
               fontSize: "14px",
-              opacity: 0.7,
-              margin: "0 0 32px",
+              color: colors.text,
+              opacity: 0.6,
+              margin: "0 0 40px",
+              lineHeight: 1.5,
             }}
           >
             {voice.tagline}
           </p>
 
           {/* Links */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {(bio_links || []).map((link, i) => (
               <a
                 key={i}
@@ -95,15 +102,16 @@ export default async function BioPage({ params }: Props) {
                 rel="noopener noreferrer"
                 style={{
                   display: "block",
-                  padding: "14px 20px",
-                  borderRadius: "12px",
-                  border: `1px solid ${colors.primary}30`,
-                  backgroundColor: `${colors.primary}10`,
+                  padding: "15px 20px",
+                  borderRadius: "14px",
+                  border: `1.5px solid ${colors.primary}40`,
+                  backgroundColor: `${colors.primary}12`,
                   color: colors.text,
                   textDecoration: "none",
-                  fontSize: "14px",
+                  fontSize: "15px",
                   fontWeight: 500,
-                  transition: "all 0.2s",
+                  fontFamily: `'${fonts.body}', sans-serif`,
+                  transition: "all 0.15s",
                 }}
               >
                 {link.label}
@@ -111,18 +119,23 @@ export default async function BioPage({ params }: Props) {
             ))}
           </div>
 
+          {(bio_links || []).length === 0 && (
+            <p style={{ fontSize: "13px", opacity: 0.4 }}>No links added yet.</p>
+          )}
+
           {/* Footer */}
           <p
             style={{
-              marginTop: "48px",
+              marginTop: "56px",
               fontSize: "11px",
-              opacity: 0.4,
+              opacity: 0.35,
+              letterSpacing: "0.05em",
             }}
           >
-            Made with glow
+            made with glow
           </p>
         </div>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }

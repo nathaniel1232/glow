@@ -14,6 +14,7 @@ const VIBE_DESCRIPTIONS: Record<Vibe, string> = {
   dark: "Dark backgrounds, neon accents, sophisticated and moody. Tech-forward.",
   coastal: "Ocean-inspired blues and whites, relaxed, airy. Clean and fresh.",
   retro: "Vintage typography, warm palettes, nostalgic. 70s/80s inspired textures.",
+  custom: "User-defined aesthetic — see keywords below.",
 };
 
 const GOOGLE_FONT_PAIRS: Record<Vibe, { heading: string; body: string }[]> = {
@@ -32,8 +33,7 @@ const GOOGLE_FONT_PAIRS: Record<Vibe, { heading: string; body: string }[]> = {
     { heading: "Playfair Display", body: "Source Serif 4" },
     { heading: "DM Serif Display", body: "Nunito" },
   ],
-  y2k: [
-    { heading: "Orbitron", body: "Exo 2" },
+  y2k: [    { heading: "Orbitron", body: "Exo 2" },
     { heading: "Rajdhani", body: "Space Mono" },
     { heading: "Audiowide", body: "Share Tech" },
   ],
@@ -52,19 +52,29 @@ const GOOGLE_FONT_PAIRS: Record<Vibe, { heading: string; body: string }[]> = {
     { heading: "Righteous", body: "Karla" },
     { heading: "Lobster Two", body: "Merriweather" },
   ],
+  custom: [
+    { heading: "Space Grotesk", body: "Inter" },
+    { heading: "DM Sans", body: "Lato" },
+    { heading: "Outfit", body: "Nunito" },
+  ],
 };
 
 export async function generateBrand(
   description: string,
-  vibe: Vibe
+  vibe: Vibe,
+  customKeywords?: string
 ): Promise<GenerationResult> {
   const fontOptions = GOOGLE_FONT_PAIRS[vibe];
   const selectedFonts = fontOptions[Math.floor(Math.random() * fontOptions.length)];
 
+  const vibeDescription = vibe === "custom" && customKeywords
+    ? `Custom style defined by these keywords: "${customKeywords}"`
+    : `${vibe} -- ${VIBE_DESCRIPTIONS[vibe]}`;
+
   const prompt = `You are a world-class brand strategist and designer. Generate a complete brand identity based on the following:
 
 Business description: "${description}"
-Design vibe: ${vibe} -- ${VIBE_DESCRIPTIONS[vibe]}
+Design vibe: ${vibeDescription}
 
 Return a JSON object with EXACTLY this structure (no markdown, no code blocks, just raw JSON):
 {
